@@ -55,9 +55,14 @@ local Lusp = {
 	standartEnv = {},
 
 	syntax = {
-		quote = function( self, args, env ) return args[2] end,	
+		quote = function( self, args, env ) 
+			return args[2] 
+		end,	
 		define = function( self, args, env ) 
 			env[args[2]] = self:eval( args[3], env ) 
+		end,
+		['if'] = function( self, args, env ) 
+			return self:eval( self:eval( args[2], env ) and args[3] or args[4], env )
 		end,
 		load = function( self, args, env )
 			local f, err = io.open( args[2]:sub(2,-2), 'r' )
