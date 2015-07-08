@@ -1,0 +1,11 @@
+(begin
+	(define cons (lua-lambda "return {args[2],args[3]}")) 
+	(define car  (lua-lambda "return args[2][1]"))
+	(define cdr  (lua-lambda "return args[2][2]"))
+	(define + (lua-lambda "local acc = args[2]; for i = 3, #args do acc = acc + args[i] end; return acc" ))
+	(define - (lua-lambda "local acc = args[2]; for i = 3, #args do acc = acc - args[i] end; return acc" ))
+	(define / (lua-lambda "local acc = args[2]; for i = 3, #args do acc = acc / args[i] end; return acc" ))
+	(define * (lua-lambda "local acc = args[2]; for i = 3, #args do acc = acc * args[i] end; return acc" ))
+	(define display (lua-lambda "print(unpack(args,2))"))
+	(define format (lua-lambda "return string.format( args[2], unpack( args, 3 ))"))
+	)
