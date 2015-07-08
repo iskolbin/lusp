@@ -1,4 +1,7 @@
 (begin
+	(define null? (lua-lambda "return args[2] == nil"))
+	(define exit (lua-lambda "os.exit()"))
+	(define list (lua-lambda "local acc_ = {args[2]}; local acc = acc_; for i = 3,#args do acc[2] = {args[3]}; acc = acc[2] end; return acc_"))
 	(define cons (lua-lambda "return {args[2],args[3]}")) 
 	(define car  (lua-lambda "return args[2][1]"))
 	(define cdr  (lua-lambda "return args[2][2]"))

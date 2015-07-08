@@ -22,4 +22,7 @@ lusp> (+ 12 30)
 lusp> (define sqr (lambda (x) (* x x)))
 lusp> (sqr 5)
 25
+lusp> (define reduce (lambda (f l a) (if (null? l) a (reduce f (cdr l) (f (car l) a)))))
+lusp> (reduce + (list 1 2 3) 0)
+5
 ```

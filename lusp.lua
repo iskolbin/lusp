@@ -10,7 +10,7 @@ local Lusp = {
 	tokenize = function( self, s )
 		local function addString( s )
 			self.strings.n = (self.strings.n or 0) + 1
-			local name = '<@string' .. self.strings.n .. '@>'
+			local name = '<@string' .. self.strings.n .. '@>' 
 			self.strings[name] = s
 			return name		
 		end
@@ -54,16 +54,11 @@ local Lusp = {
 
 	standartEnv = {},
 
+	makeLuaSyntax = function( self, code, env )
+		return self:makeLuaProcedure( code, env )
+	end,
+
 	syntax = {
-		quote = function( self, args, env ) 
-			return args[2] 
-		end,	
-		define = function( self, args, env ) 
-			env[args[2]] = self:eval( args[3], env ) 
-		end,
-		['if'] = function( self, args, env ) 
-			return self:eval( self:eval( args[2], env ) and args[3] or args[4], env )
-		end,
 		load = function( self, args, env )
 			local f, err = io.open( args[2]:sub(2,-2), 'r' )
 			if not f then
@@ -73,6 +68,7 @@ local Lusp = {
 		end,
 		lambda = function( self, args, env ) return self:makeProcedure( args[2], args[3], env ) end,
 		['lua-lambda'] = function( self, args, env ) return self:makeLuaProcedure( args[2], env ) end,
+		['lua-syntax'] = function( self, args, env ) self.syntax[args[2]] = self:makeLuaSyntax( args[3], env ) end,
 		begin = function( self, args, env ) 
 			for i = 2, #args-1 do
 				self:eval( args[i], env )
@@ -116,21 +112,17 @@ local Lusp = {
 		error( s )
 	end,
 
-	replStartCommands = {'(load "stdlib.scm")'},
-
-	repl = function( self )
-		print( 'Welcome to Lusp 0.1' )
-		for _, s in ipairs( self.replStartCommands ) do 
-			self:eval( self:parse( s )) 
+	repl = function( self, args )
+		io.write( args.welcome )
+		if args.init then
+			self:eval( self:parse( args.init ))
 		end
 		while true do
-			io.write( 'lusp> ')
+			io.write( args.promt )
 			local line = io.read()
-			if line == '(exit)' then 
-				break
-			elseif #line > 0 then
+			if #line > 0 then
 				local res = self:eval( self:parse( line ))
-				if res then print( res ) end
+				if res ~= nil then print( res ) end
 			end
 		end
 	end,
