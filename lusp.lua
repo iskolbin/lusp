@@ -6,7 +6,10 @@ local Lusp = {
 	onSyntaxError = function( self, message )
 		error( message )
 	end,
-	
+
+	-- future tokenizer
+	-- x:gsub( '("(.-)")',addstr):gsub('([%(%)`,])', ' %1 '):gsub( ' , @', ' ,@ ' ):gmatch( '%S+' )
+
 	tokenize = function( self, s )
 		local function addString( s )
 			self.strings.n = (self.strings.n or 0) + 1
